@@ -229,6 +229,7 @@ class SettingsScreen(Screen):
         settings = Globals.settings
         self.sw_audio.switch.active = Globals.settings["audio"]
         self.sw_icab_verbose.switch.active = Globals.settings["icabbi_verbose_mode"]
+        self.sw_zone_sort.switch.active = Globals.settings.get("zone_jobs_only", True)
         self.bidding_range.slider.value = Globals.settings["bidding_radius"]
         
         self.driverbox.set_driver_id(Globals.settings["driver_id"])
@@ -271,7 +272,8 @@ class SettingsScreen(Screen):
         save_settings(Globals.settings)
     
     def on_zone_jobs_only_active(self, *args):
-        print(args)
+        Globals.settings.setdefault("zone_jobs_only", args[0].active)
+        save_settings(Globals.settings)
 
 
 def check_value_isdigit(instance, value):
