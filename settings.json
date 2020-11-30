@@ -1,1 +1,1 @@
-{"debug_ip": "192.168.0.13", "debug_port": "5000", "android_run_first_time": false, "audio": true, "auto_bidding": true, "bidding_radius": 0.0, "driver_id": "19152", "host": "http://192.168.0.13:5000", "satnav": "google", "icabbi_verbose_mode": true}
+{"debug_ip": "192.168.56.1", "debug_port": "5000", "android_run_first_time": false, "audio": true, "auto_bidding": true, "bidding_radius": 0.0, "driver_id": "19152", "host": "http://192.168.56.1:5000", "satnav": "google", "icabbi_verbose_mode": true}

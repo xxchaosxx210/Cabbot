@@ -225,7 +225,9 @@ def on_handler_event(resp):
         sv.add("Driver Status: ", "Logged out")
     # ALL ZONES CHANGED
     elif resp.event == handler.EVENT_ZONES:
+        # if status screen then show zone update
         if Globals.app.root.current == "status":
+            # get the listctrl window
             listctrl = Globals.app.root.current_screen.ids.get("headerview_id")
             listctrl.column_rv.populate(resp.zones)
     # ZONE HAS CHANGED

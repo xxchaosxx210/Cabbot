@@ -204,17 +204,20 @@ class SettingsScreen(Screen):
         self.name = "settings"
         self.sw_audio = SwitchButton(label="Audio", size_hint=(.3, 1))
         self.sw_audio.switch.bind(active=self.on_audio_active)
+        self.sw_zone_sort = SwitchButton(label="Show Zonal Jobs only", size_hint=(.3, 1))
+        self.sw_zone_sort.switch.bind(active=self.on_zone_jobs_only_active)
         self.sw_icab_verbose = SwitchButton(label="iCabbi Verbose", size_hint=(.3, 1))
         self.sw_icab_verbose.switch.bind(active=self.on_verbose_active)
         self.bidding_range = BiddingRangeWidget()
         self.driverbox = DriverWidget()
         self.debugbox = DebugWidget()
         self.satnav = SatNavWidget()
-        gd_layout = GridLayout(rows=6, size_hint=(.8, .9), pos_hint={"center_x": .5, "center_y": .5})
+        gd_layout = GridLayout(rows=7, size_hint=(.8, .9), pos_hint={"center_x": .5, "center_y": .5})
         gd_layout.add_widget(self.debugbox)
         gd_layout.add_widget(self.driverbox)
         gd_layout.add_widget(self.satnav)
         gd_layout.add_widget(self.sw_audio)
+        gd_layout.add_widget(self.sw_zone_sort)
         gd_layout.add_widget(self.sw_icab_verbose)
         gd_layout.add_widget(self.bidding_range)
         self.add_widget(gd_layout)
@@ -266,6 +269,9 @@ class SettingsScreen(Screen):
     def on_verbose_active(self, *args):
         Globals.settings["icabbi_verbose_mode"] = args[0].active
         save_settings(Globals.settings)
+    
+    def on_zone_jobs_only_active(self, *args):
+        print(args)
 
 
 def check_value_isdigit(instance, value):
