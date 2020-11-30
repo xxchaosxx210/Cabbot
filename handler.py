@@ -440,9 +440,10 @@ def thread_handler(**kwargs):
                                             # Check Zone information
                                             _zone, _zones = _has_zone_changed(driver, host, previous_state["zone"])
                                             # Filter Zones with Jobs only
-                                            _job_only_zones = list(filter(lambda zone: zone["stats"] == "~3", _zones))
+                                            is_sort_zones = globals.Globals.settings.get("zone_jobs_only", True)
+                                            sorted_zones = icabbi.sortzones(_zones, jobs=is_sort_zones)
                                             # Notify Main Thread of Zones
-                                            dispatch_event(event=EVENT_ZONES, zones=_job_only_zones)
+                                            dispatch_event(event=EVENT_ZONES, zones=sorted_zones)
                                             # Check for Driver Zone changes
                                             if _zone:
                                                 if "ext_zone_info" in _zone:

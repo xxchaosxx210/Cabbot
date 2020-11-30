@@ -272,7 +272,7 @@ class SettingsScreen(Screen):
         save_settings(Globals.settings)
     
     def on_zone_jobs_only_active(self, *args):
-        Globals.settings.setdefault("zone_jobs_only", args[0].active)
+        Globals.settings["zone_jobs_only"] = args[0].active
         save_settings(Globals.settings)
 
 

@@ -460,13 +460,13 @@ def sortzones(zones, **kwargs):
     jobs = kwargs.get("jobs")
     drivers = kwargs.get("drivers")
     if jobs and drivers:
-        return [zone for zone in zones if int(zone["job_count"]) > 0 and zone["total"].isdigit()]
+        return [zone for zone in zones if int(zone["job_count"]) > 0]
     elif jobs and not drivers:
-        return [zone for zone in zones if int(zone["job_count"]) > 0 and zone["total"] == ""]
+        return [zone for zone in zones if int(zone["job_count"]) > 0]
     elif drivers and not jobs:
-        return [zone for zone in zones if zone["job_count"] == '0' and zone["total"] != ""]
+        return [zone for zone in zones if zone["job_count"] == '0']
     else:
-        return []
+        return zones
 
 
 def getmessagearchive(driver_id, host_addr):
