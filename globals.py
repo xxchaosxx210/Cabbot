@@ -9,10 +9,10 @@ from kivy.lang.builder import Builder
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 
-__title__ = "CabBot"
-__version__ = "0.6.8"
+__title__ = "Cabbot"
+__version__ = "0.6.9"
 __author__ = "Paul Millar"
-__date__ = "10-10-2019"
+__date__ = "01-12-2020"
 __license__ = "GNU Open Source"
 
 # make saving and loading settings from file thread safe
