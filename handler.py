@@ -290,6 +290,24 @@ def sort_weekly_earnings(bookings):
     list(map(next_booking, bookings))
     return takings
 
+def sort_prebookings(driverid, host, zones):
+    """
+    retrieves prebookings and sorts and adds them to the zones list
+    """
+    prebookings = icabbi.getprebookings(driverid, host)
+    for prebooking in prebookings:
+        # check for zone with prebookings and add the pickup time to the zone
+        for zone in zones:
+            if zone["id"] == prebooking["zone"]["id"]:
+                zone["pickup_date"] = prebooking["pickup_date"]
+                prebooking["zone_found"] = True
+        if prebooking.get("zone_found", False) == False:
+            # No id match so append prebooking to zones list
+            zones.append({"id": prebooking["zone"]["id"],
+                          "job_count": 1,
+                          "total": 0,
+                          "stats": "~3",
+                          "pickup_date": prebooking["pickup_date"]})
 
 def thread_handler(**kwargs):
     """
@@ -441,6 +459,9 @@ def thread_handler(**kwargs):
                                             _zone, _zones = _has_zone_changed(driver, host, previous_state["zone"])
                                             # Filter Zones with Jobs only
                                             is_sort_zones = globals.Globals.settings.get("zone_jobs_only", True)
+                                            # Get Pre-Booking jobs and add to Zones
+                                            sort_prebookings(driver_id, host, _zones)
+                                            # check for zones with jobs
                                             sorted_zones = icabbi.sortzones(_zones, jobs=is_sort_zones)
                                             # Notify Main Thread of Zones
                                             dispatch_event(event=EVENT_ZONES, zones=sorted_zones)
