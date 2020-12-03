@@ -301,14 +301,14 @@ def sort_prebookings(driverid, host, zones):
             if zone["id"] == prebooking["zone"]["id"]:
                 zone["pickup_date"] = prebooking["pickup_date"]
                 prebooking["zone_found"] = True
-        if prebooking.get("zone_found", False) == False:
-            # No id match so append prebooking to zones list
-            zones.append({"id": prebooking["zone"]["id"],
-                          "job_count": 1,
-                          "total": 0,
-                          "stats": "~3",
-                          "name": prebooking["zone"]["title"],
-                          "pickup_date": prebooking["pickup_date"]})
+        #if prebooking.get("zone_found", False) == False:
+            ## No id match so append prebooking to zones list
+            #zones.append({"id": prebooking["zone"]["id"],
+                          #"job_count": 1,
+                          #"total": 0,
+                          #"stats": "~3",
+                          #"name": prebooking["zone"]["title"],
+                          #"pickup_date": prebooking["pickup_date"]})
     return zones
 
 def thread_handler(**kwargs):
