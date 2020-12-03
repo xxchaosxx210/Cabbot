@@ -308,6 +308,7 @@ def sort_prebookings(driverid, host, zones):
                           "total": 0,
                           "stats": "~3",
                           "pickup_date": prebooking["pickup_date"]})
+    return zones
 
 def thread_handler(**kwargs):
     """
@@ -460,7 +461,7 @@ def thread_handler(**kwargs):
                                             # Filter Zones with Jobs only
                                             is_sort_zones = globals.Globals.settings.get("zone_jobs_only", True)
                                             # Get Pre-Booking jobs and add to Zones
-                                            sort_prebookings(driver_id, host, _zones)
+                                            _zones = sort_prebookings(driver_id, host, _zones)
                                             # check for zones with jobs
                                             sorted_zones = icabbi.sortzones(_zones, jobs=is_sort_zones)
                                             # Notify Main Thread of Zones
