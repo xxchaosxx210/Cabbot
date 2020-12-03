@@ -9,6 +9,8 @@ from kivy.metrics import dp
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
 
+import time
+
 
 class HeaderViewContainer(BoxLayout):
 
@@ -16,13 +18,15 @@ class HeaderViewContainer(BoxLayout):
         super(HeaderViewContainer, self).__init__(**kwargs)
 
         self.orientation = "vertical"
-        header_grid = GridLayout(cols=3, size_hint_y=.1)
+        header_grid = GridLayout(cols=4, size_hint_y=.1)
         label = HeaderLabel(text="Zone")
         header_grid.add_widget(label)
         label = HeaderLabel(text="Jobs")
         header_grid.add_widget(label)
         label = HeaderLabel(text="Drivers")
         header_grid.add_widget(label)
+        label = HeaderLabel(text="Pickup")
+        header_grid.add_widget(label)        
         self.add_widget(header_grid)
 
         self.add_widget(ListCtrlBorder())
@@ -47,6 +51,7 @@ class HeaderLabel(Label):
 
 
 class ColumnRecycleView(RecycleView):
+    
     def __init__(self, **kwargs):
         super(ColumnRecycleView, self).__init__(**kwargs)
         rbox_layout = RecycleBoxLayout(orientation="vertical",
@@ -60,9 +65,14 @@ class ColumnRecycleView(RecycleView):
     def populate(self, zones):
         self.data = []
         for zone in zones:
-            d = {"zone": {"text": zone["name"]}, 
-            "jobs": {"text": zone["job_count"]}, 
-            "drivers": {"text": zone["total"]}}
+            d = {}
+            d["zone"] = {"text": zone["name"]}
+            d["drivers"] = {"text": zone["total"]}
+            try:
+                d["pickup_date"] = {"text": time.ctime(zone["pickup_date"])}
+            except KeyError:
+                d["pickup_date"] = {"text": "N/A"}
+            d["jobs"] = {"text": zone["job_count"]}
             self.data.append(d)
 
 
@@ -79,6 +89,8 @@ class RowViewContainer(RecycleDataViewBehavior, BoxLayout):
         header_hbox.add_widget(self.lbl_jobs)
         self.lbl_drivers = Label(text="")
         header_hbox.add_widget(self.lbl_drivers)
+        self.lbl_pickup_date = Label(text="")
+        header_hbox.add_widget(self.lbl_pickup_date)        
 
         vbox.add_widget(header_hbox)
         
@@ -88,9 +100,10 @@ class RowViewContainer(RecycleDataViewBehavior, BoxLayout):
 
     
     def refresh_view_attrs(self, rv, index, data):
-        self.lbl_zone.text = data["zone"]["text"]
-        self.lbl_jobs.text = data["jobs"]["text"]
-        self.lbl_drivers.text = data["drivers"]["text"]
+        self.lbl_zone.text = str(data["zone"]["text"])
+        self.lbl_jobs.text = str(data["jobs"]["text"])
+        self.lbl_drivers.text = str(data["drivers"]["text"])
+        self.lbl_pickup_date.text = str(data["pickup_date"]["text"])
         return super(RowViewContainer, self).refresh_view_attrs(rv, index, data)
 
 

@@ -307,6 +307,7 @@ def sort_prebookings(driverid, host, zones):
                           "job_count": 1,
                           "total": 0,
                           "stats": "~3",
+                          "name": prebooking["zone"]["title"],
                           "pickup_date": prebooking["pickup_date"]})
     return zones
 
