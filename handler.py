@@ -298,17 +298,18 @@ def sort_prebookings(driverid, host, zones):
     for prebooking in prebookings:
         # check for zone with prebookings and add the pickup time to the zone
         for zone in zones:
-            if zone["id"] == prebooking["zone"]["id"]:
+            if int(zone["id"]) == int(prebooking["zone_id"]):
                 zone["pickup_date"] = prebooking["pickup_date"]
                 prebooking["zone_found"] = True
-        #if prebooking.get("zone_found", False) == False:
-            ## No id match so append prebooking to zones list
-            #zones.append({"id": prebooking["zone"]["id"],
-                          #"job_count": 1,
-                          #"total": 0,
-                          #"stats": "~3",
-                          #"name": prebooking["zone"]["title"],
-                          #"pickup_date": prebooking["pickup_date"]})
+                break
+        if "zone_found" not in prebooking:
+            # No id match so append prebooking to zones list
+            zones.append({"id": prebooking["zone_id"],
+                          "job_count": 1,
+                          "total": 0,
+                          "stats": "~3",
+                          "name": prebooking["zone"]["title"],
+                          "pickup_date": prebooking["pickup_date"]})
     return zones
 
 def thread_handler(**kwargs):
@@ -522,3 +523,19 @@ def _kwargs2tuple(tuple_name, **kwargs):
 def _dispatch_event(callback, **kwargs):
     """ sends a namedtuple to a callback function. If using Kivy make sure @mainthread decorator is used """
     return callback(_kwargs2tuple("Reply", **kwargs))
+
+def _test():
+    icabbi.verbose_mode = False
+    zoneids = icabbi.getzoneids("19152", icabbi.UK6)
+    zones = icabbi.getzones("19152", icabbi.UK6)
+    zones = sort_prebookings("19152", icabbi.UK6, zones)
+    print("Zone=========Jobs===========Time")
+    for zone in zones:
+        zone["name"] = icabbi.findzonebyid(zoneids, zone["id"])["title"]
+        if "pickup_date" in zone:
+            print(f"{zone['name']}\t{zone['job_count']}\t{time.ctime(zone['pickup_date'])}")
+        else:
+            print(f"{zone['name']}\t{zone['job_count']}\tN/A")
+
+if __name__ == '__main__':
+    _test()
