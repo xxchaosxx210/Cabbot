@@ -310,6 +310,16 @@ def sort_prebookings(driverid, host, zones):
                           "stats": "~3",
                           "name": prebooking["zone"]["title"],
                           "pickup_date": prebooking["pickup_date"]})
+    # Bubble sort the zones by pickup_date
+    for i in range(len(zones)):
+        for x in range(len(zones) - 1):
+            try:
+                if int(zones[x]["pickup_date"]) > int(zones[x+1]["pickup_date"]):
+                    temp = zones[x+1]
+                    zones[x] = zones[x+1]
+                    zones[x+1] = temp
+            except KeyError:
+                pass
     return zones
 
 def thread_handler(**kwargs):
