@@ -369,6 +369,8 @@ def thread_handler(**kwargs):
                 # START OR STOP CHECKING DRIVER STATUS
                 elif message.event == EVENT_CHECK_STATUS:
                     check_status = not check_status
+                    if check_status == True:
+                        globals.Globals.android_text2speak.speak("Checking Driver status")
                 # REQUEST DRIVER STATUS UPDATE
                 elif message.event == EVENT_DRIVER_UPDATE:
                     # id change

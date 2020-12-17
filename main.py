@@ -184,7 +184,6 @@ def format_booking(booking):
     s["Fee"] = price
     return s
 
-
 @mainthread
 def on_handler_event(resp):
     """
