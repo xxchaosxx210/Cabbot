@@ -347,7 +347,6 @@ def thread_handler(**kwargs):
     dispatch_event = partial(_dispatch_event, callback=kwargs["callback"])
     # dont't check driver status on start up. send EVENT_CHECK_STATUS with status argument set to true
     check_status = False
-    first_time_check_status = True
     # pause condition
     pause_thread = False
     # Latitude and Longitude coordinates. Note only used using Android. Default is set at castle meadow
@@ -355,8 +354,6 @@ def thread_handler(**kwargs):
     longitude = 1.282040
 
     settings = globals.Globals.settings
-    
-    globals.Globals.android_text2speak.speak("Welcome back Paul. Scanner thread is now active. Press start to scan driver status and network")
 
     try:
         while True:
@@ -372,9 +369,6 @@ def thread_handler(**kwargs):
                 # START OR STOP CHECKING DRIVER STATUS
                 elif message.event == EVENT_CHECK_STATUS:
                     check_status = not check_status
-                    first_time_check_status = check_status
-                    if check_status == True:
-                        globals.Globals.android_text2speak.speak("Checking Driver status")
                 # REQUEST DRIVER STATUS UPDATE
                 elif message.event == EVENT_DRIVER_UPDATE:
                     # id change
@@ -440,10 +434,7 @@ def thread_handler(**kwargs):
                     # CHECK STATUS EVERY n SECONDS
                     if not Globals.zoneids:
                         # global zoneids not loaded then retrieve them from the server
-                        globals.Globals.android_text2speak.speak("Requesting Zone IDs")
-                        time.sleep(0.5)
                         Globals.zoneids = icabbi.getzoneids(driver_id, host)
-                        globals.Globals.android_text2speak.speak(f"There are currently {len(Globals.zoneids)} zones on the drivers network")
                     try:
                         # SET DRIVER GPS AND RETRIEVE DRIVER STATUS
                         latitude, longitude = Globals.gps.getgps()
@@ -503,10 +494,6 @@ def thread_handler(**kwargs):
                                         if "bookings" in driver:
                                             booking_info = icabbi.getbooking(
                                                 driver_id, host, driver["bookings"][0]["id"])
-                                            if first_time_check_status:
-                                                globals.Globals.android_text2speak.speak(f'''
-                                                Driver is currently on a Job. Pickup address is {booking_info["address"]}.
-                                                Destination is {booking_info["destination"]}''')
                                             # save state of status and reset zone state
                                             previous_state["status"] = status
                                             previous_state["zone"] = _new_default_zone()
@@ -520,7 +507,6 @@ def thread_handler(**kwargs):
                     except icabbi.NetworkExceptions as err:
                         previous_state = _new_default_states()
                         dispatch_event(event=EVENT_NETWORK_ERROR, message=str(err))
-                    first_time_check_status = False
                 else:
                     previous_state = _new_default_states()
             print(f"Latitude: {latitude}\nLongitude: {longitude}")
