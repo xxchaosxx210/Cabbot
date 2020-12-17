@@ -84,6 +84,8 @@ class Globals:
 # drivers           - list
 # driver_kick_count - int
 # message           - str
+# event             - EVENT_STATUS_REQUEST
+# status            - dict
 EVENT_QUIT = 1001
 EVENT_CHECK_STATUS = 1002
 EVENT_DRIVER_UPDATE = 1003
@@ -106,6 +108,7 @@ EVENT_MESSAGE_DISPATCH = 1019
 EVENT_ZONES = 1020
 EVENT_ANDROID_START_GPS = 1021
 EVENT_THREAD_EXCEPTION = 1022
+EVENT_STATUS_REQUEST = 1023
 
 def _new_default_zone():
     """ creates a new zone dictionary """
@@ -426,6 +429,13 @@ def thread_handler(**kwargs):
                     settings["auto_bidding"] = message.enable
                     globals.save_settings(settings)
                     dispatch_event(event=EVENT_CHANGE_BIDDING, enable=settings["auto_bidding"])
+                elif message.event == EVENT_STATUS_REQUEST:
+                    status_request = {"check_status": check_status}
+                    status_request["zones_count"] = len(Globals.zoneids)
+                    status_request["latitude"] = latitude
+                    status_request["longitude"] = longitude
+                    status_request["driver"] = driver
+                    dispatch_event(event=EVENT_STATUS_REQUEST, status=status_request)
             except queue.Empty:
                 pass
 

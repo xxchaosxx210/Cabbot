@@ -95,6 +95,11 @@ Builder.load_string('''
                     on_release: root.on_autobid_button(self)
                     id: auto_bid_button
             Button:
+                text: "Status"
+                on_release: root.on_status_button(self)
+                background_normal: ''
+                background_color: .1, .1, .7, 1
+            Button:
                 background_normal: ''
                 background_color: .7, .1, .1, 1
                 text: "Busy"
@@ -134,6 +139,9 @@ class StatusScreen(Screen):
         else:
             active = True
         handler.send_message(event=handler.EVENT_CHANGE_BIDDING, enable=active)
+    
+    def on_status_button(self, button):
+        handler.send_message(event=handler.EVENT_STATUS_REQUEST)
 
     def on_enter(self, *args):
         Globals.mainscrn = self
