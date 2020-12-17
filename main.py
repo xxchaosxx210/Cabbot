@@ -201,12 +201,14 @@ def show_request_status(status):
             speach += 'availible. '
             speach += 'Variables found in Driver class. '
             for key in status["driver"]:
-                speach += f"{key} is equal to {status['driver'][key]}"
+                if type(status['driver'][key]) != int:
+                    speach += f"{key} is equal to {status['driver'][key]}. "              
         elif status["driver"]["status"] == 2:
             speach += 'on a job. '
             speach += 'Variables found in Driver class. '
             for key in status["driver"]:
-                speach += f"{key} is equal to {status['driver'][key]}"            
+                if type(status['driver'][key]) != int:
+                    speach += f"{key} is equal to {status['driver'][key]}. "                            
         else:
             speach += 'logged out .'
     else:
