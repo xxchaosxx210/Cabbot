@@ -215,8 +215,8 @@ def on_handler_event(resp):
         sv.add("", '''[ref={"action":"madecontact", "booking_id": "%s"}][color=#E67300]Picked up Customer[/color][/ref]''' % resp.booking["id"])
         user = resp.booking.get("user", {"name": "unknown"})
         data = resp.booking.get("data", {"destination_lat": 0.0, "destination_lng": 0.0})
-        lat = res.booking.get("lat", 0.0)
-        lng = res.booking.get("lng", 0.0)
+        lat = resp.booking.get("lat", 0.0)
+        lng = resp.booking.get("lng", 0.0)
         dest_lat = data.get("destination_lat", 0.0)
         dest_lng = data.get("destination_lng", 0.0)
         if resp.booking["status"] == "ENROUTE":
