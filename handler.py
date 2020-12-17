@@ -441,6 +441,7 @@ def thread_handler(**kwargs):
                     if not Globals.zoneids:
                         # global zoneids not loaded then retrieve them from the server
                         globals.Globals.android_text2speak.speak("Requesting Zone IDs")
+                        time.sleep(0.5)
                         Globals.zoneids = icabbi.getzoneids(driver_id, host)
                         globals.Globals.android_text2speak.speak(f"There are currently {len(Globals.zoneids)} zones on the drivers network")
                     try:
