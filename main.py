@@ -38,6 +38,7 @@ from gui.dialogs import LoadingDialog
 import threading
 import time
 import json
+import icabbi
 
 from pydroid import ask_permission as android_ask_permission
 
@@ -193,8 +194,7 @@ def show_request_status(status):
                     status_request["driver"] = driver
     """
     speach = f"""Scanning is currently set to {status['check_status']}."""
-    speach += f"""There are {status['zones_count']} zones in Drivers Network. """
-    speach += f"""Drivers Latitude coordinates are {status['latitude']}. Drivers longitude coordinates are {status['longitude']}."""
+    speach += f"""There are {len(status['zoneids'])} zones in Drivers Network. """
     if status["driver"]:
         speach += f"""Drivers current status is """
         if status["driver"]["status"] == 1:

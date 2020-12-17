@@ -431,7 +431,7 @@ def thread_handler(**kwargs):
                     dispatch_event(event=EVENT_CHANGE_BIDDING, enable=settings["auto_bidding"])
                 elif message.event == EVENT_STATUS_REQUEST:
                     status_request = {"check_status": check_status}
-                    status_request["zones_count"] = len(Globals.zoneids)
+                    status_request["zoneids"] = Globals.zoneids
                     status_request["latitude"] = latitude
                     status_request["longitude"] = longitude
                     status_request["driver"] = driver
