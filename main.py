@@ -40,6 +40,8 @@ import time
 import json
 
 from pydroid import ask_permission as android_ask_permission
+from pydroid import navigate_google_maps
+from pydroid import navigate_waze
 
 
 Builder.load_string('''
@@ -211,13 +213,20 @@ def on_handler_event(resp):
                 sv.add("", "")
         sv.add("", '''[ref={"action":"arrived","booking_id":"%s"}][color=#FFD919]Notify Customer[/color][/ref]''' % resp.booking["id"])
         sv.add("", '''[ref={"action":"madecontact", "booking_id": "%s"}][color=#E67300]Picked up Customer[/color][/ref]''' % resp.booking["id"])
-        data = resp.booking.get("user", {"name": "unknown"})
+        user = resp.booking.get("user", {"name": "unknown"})
+        data = resp.booking.get("data", {"destination_lat": 0.0, "destination_lng": 0.0})
+        lat = res.booking.get("lat", 0.0)
+        lng = res.booking.get("lng", 0.0)
+        dest_lat = data.get("destination_lat", 0.0)
+        dest_lng = data.get("destination_lng", 0.0)
         if resp.booking["status"] == "ENROUTE":
             Globals.android_text2speak.speak("Detected Driver is on route to job.")
             Globals.android_text2speak.speak("Setting Latitude and Longitude coordinates for pickup")
+            set_android_map_coords(lat, lng)
         elif resp.booking["status"] == "DROPPINGOFF":
             Globals.android_text2speak.speak("Detected Driver has picked up Customer.")
             Globals.android_text2speak.speak(f'Setting Latitude and Longitude coordinates for {user["name"]}')
+            set_android_map_coords(dest_lat, dest_lng)
     # JOB HAS BEEN OFFERED
     elif resp.event == handler.EVENT_JOB_OFFER:
         if hasattr(resp, "accepted"):
@@ -307,6 +316,11 @@ def on_handler_event(resp):
         dlg.message_label.text = resp.error
         dlg.open()
 
+def set_android_map_coords(lat, lng):
+    if Globals.settings["satnav"] == "google":
+        navigate_google_maps(f"geo:0,0?q={lat},{lng}")
+    else:
+        navigate_waze(lat, lng)
 
 def main():
     cabbot_app = CabBotApp()
