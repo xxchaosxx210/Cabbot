@@ -211,6 +211,13 @@ def on_handler_event(resp):
                 sv.add("", "")
         sv.add("", '''[ref={"action":"arrived","booking_id":"%s"}][color=#FFD919]Notify Customer[/color][/ref]''' % resp.booking["id"])
         sv.add("", '''[ref={"action":"madecontact", "booking_id": "%s"}][color=#E67300]Picked up Customer[/color][/ref]''' % resp.booking["id"])
+        data = resp.booking.get("user", {"name": "unknown"})
+        if resp.booking["status"] == "ENROUTE":
+            Globals.android_text2speak.speak("Detected Driver is on route to job.")
+            Globals.android_text2speak.speak("Setting Latitude and Longitude coordinates for pickup")
+        elif resp.booking["status"] == "DROPPINGOFF":
+            Globals.android_text2speak.speak("Detected Driver has picked up Customer.")
+            Globals.android_text2speak.speak(f'Setting Latitude and Longitude coordinates for {user["name"]}')
     # JOB HAS BEEN OFFERED
     elif resp.event == handler.EVENT_JOB_OFFER:
         if hasattr(resp, "accepted"):
