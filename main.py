@@ -219,6 +219,7 @@ def on_handler_event(resp):
         lng = resp.booking.get("lng", 0.0)
         dest_lat = data.get("destination_lat", 0.0)
         dest_lng = data.get("destination_lng", 0.0)
+        print("")
         if resp.booking["status"] == "ENROUTE":
             Globals.android_text2speak.speak("Detected Driver is on route to job.")
             Globals.android_text2speak.speak("Setting Latitude and Longitude coordinates for pickup")
