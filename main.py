@@ -195,7 +195,7 @@ def show_request_status(status):
     speach = f"""Scanning is currently set to {status['check_status']}."""
     speach += f"""There are {status['zones_count']} zones in Drivers Network. """
     speach += f"""Drivers Latitude coordinates are {status['latitude']}. Drivers longitude coordinates are {status['longitude']}."""
-    if driver:
+    if status["driver"]:
         speach += f"""Drivers current status is """
         if status["driver"]["status"] == 1:
             speach += 'availible. '
