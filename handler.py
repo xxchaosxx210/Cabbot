@@ -109,6 +109,7 @@ EVENT_ZONES = 1020
 EVENT_ANDROID_START_GPS = 1021
 EVENT_THREAD_EXCEPTION = 1022
 EVENT_STATUS_REQUEST = 1023
+EVENT_THREAD_START = 1024
 
 def _new_default_zone():
     """ creates a new zone dictionary """
@@ -357,6 +358,8 @@ def thread_handler(**kwargs):
     longitude = 1.282040
 
     settings = globals.Globals.settings
+    
+    dispatch_event(event=EVENT_THREAD_START)
 
     try:
         while True:

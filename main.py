@@ -228,6 +228,9 @@ def on_handler_event(resp):
     # CHANGED HOST
     if resp.event == handler.EVENT_HOST_UPDATE:
         Logger.info("Host is now {host}".format(host=resp.host))
+    # HANDLER THREAD HAS STARTED
+    elif resp.event == handler.EVENT_THREAD_START:
+        Globals.android_text2speak.speak("Cab Bot handler thread has started. Press Start to scan Driver status and Network. ")
     # CHANGED DRIVER ID
     elif resp.event == handler.EVENT_DRIVER_UPDATE:
         if hasattr(resp, "driver_id"):
