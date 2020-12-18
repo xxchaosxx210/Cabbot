@@ -230,7 +230,9 @@ def on_handler_event(resp):
         Logger.info("Host is now {host}".format(host=resp.host))
     # HANDLER THREAD HAS STARTED
     elif resp.event == handler.EVENT_START_SCAN:
-        speach = f"Initiating Scan for Driver {Globals.settings['driver_id']}. "
+        speach = f"Initiating Scan for Driver "
+        for ch in Globals.settings['driver_id']:
+            speach += f'{ch}. '
         speach += f"Auto bidding is set to {Globals.settings['auto_bidding']}. "
         Globals.android_text2speak.speak(speach)
     # CHANGED DRIVER ID
