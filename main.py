@@ -199,18 +199,23 @@ def show_request_status(status):
         speach += f"""Drivers current status is """
         if status["driver"]["status"] == 1:
             speach += 'availible. '
-            speach += 'Variables found in Driver class. '
-            for key in status["driver"]:
-                if type(status['driver'][key]) != int:
-                    speach += f"{key} is equal to {status['driver'][key]}. "              
+            zone = status["driver"]["zones"][0]
+            zoneinfo = icabbi.getzone(status["driver"]["id"], Globals.settings["host"], zone["zone_id"])
+            speach += f"Driver is currently in {zone['title']} zone. "
+            speach += f"Current position in Zone is {zone['position']}. "
+            speach += f"There are {zone['total']} Drivers in this zone. "
         elif status["driver"]["status"] == 2:
             speach += 'on a job. '
-            speach += 'Variables found in Driver class. '
-            for key in status["driver"]:
-                if type(status['driver'][key]) != int:
-                    speach += f"{key} is equal to {status['driver'][key]}. "                            
+            booking = icabbi.getbooking(status["driver"]["id"], Globals.settings["host"], status["driver"]["bookings"][0]["id"])
+            data = booking.get("data", {"address": "N/A", "destination": "N/A"})
+            speach += f"address is equal to {data['address']}. "
+            speach += f"destination is equal to {data['destination']}. "
+            user = booking.get("user", {"name": "unknown"})
+            speach += f"Customers name is equal to {user['name']}. "
         else:
             speach += 'logged out .'
+            speach += f"status is equal to {status['driver']['status']}. "
+            speach += f"reason is equal to {status['driver']['reason']}. "
     else:
         speach += "Drivers status is currently unknown"
     Globals.android_text2speak.speak(speach)
