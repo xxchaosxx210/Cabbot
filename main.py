@@ -38,6 +38,7 @@ from gui.dialogs import LoadingDialog
 import threading
 import time
 import json
+import icabbi
 
 from pydroid import ask_permission as android_ask_permission
 
@@ -184,6 +185,40 @@ def format_booking(booking):
     s["Fee"] = price
     return s
 
+def show_request_status(status):
+    """
+    status_request = {"check_status": check_status}
+                    status_request["zones_count"] = len(Globals.zoneids)
+                    status_request["latitude"] = latitude
+                    status_request["longitude"] = longitude
+                    status_request["driver"] = driver
+    """
+    speach = f"""Scanning is currently set to {status['check_status']}."""
+    speach += f"""There are {len(status['zoneids'])} zones in Drivers Network. """
+    if status["driver"]:
+        speach += f"""Drivers current status is """
+        if status["driver"]["status"] == 1:
+            speach += 'availible. '
+            zone = status["driver"]["zones"][0]
+            zoneinfo = icabbi.getzone(status["driver"]["id"], Globals.settings["host"], zone["zone_id"])
+            speach += f"Driver is currently in {zone['title']} zone. "
+            speach += f"Current position in Zone is {zone['position']}. "
+            speach += f"There are {zone['total']} Drivers in this zone. "
+        elif status["driver"]["status"] == 2:
+            speach += 'on a job. '
+            booking = icabbi.getbooking(status["driver"]["id"], Globals.settings["host"], status["driver"]["bookings"][0]["id"])
+            data = booking.get("data", {"address": "N/A", "destination": "N/A"})
+            speach += f"address is equal to {data['address']}. "
+            speach += f"destination is equal to {data['destination']}. "
+            user = booking.get("user", {"name": "unknown"})
+            speach += f"Customers name is equal to {user['name']}. "
+        else:
+            speach += 'logged out .'
+            speach += f"status is equal to {status['driver']['status']}. "
+            speach += f"reason is equal to {status['driver']['reason']}. "
+    else:
+        speach += "Drivers status is currently unknown"
+    Globals.android_text2speak.speak(speach)
 
 @mainthread
 def on_handler_event(resp):
@@ -193,6 +228,13 @@ def on_handler_event(resp):
     # CHANGED HOST
     if resp.event == handler.EVENT_HOST_UPDATE:
         Logger.info("Host is now {host}".format(host=resp.host))
+    # HANDLER THREAD HAS STARTED
+    elif resp.event == handler.EVENT_START_SCAN:
+        speach = f"Initiating Scan for Driver "
+        for ch in Globals.settings['driver_id']:
+            speach += f'{ch}. '
+        speach += f"Auto bidding is set to {Globals.settings['auto_bidding']}. "
+        Globals.android_text2speak.speak(speach)
     # CHANGED DRIVER ID
     elif resp.event == handler.EVENT_DRIVER_UPDATE:
         if hasattr(resp, "driver_id"):
@@ -299,7 +341,9 @@ def on_handler_event(resp):
         dlg = MessageDialog()
         dlg.message_label.text = resp.error
         dlg.open()
-
+    # STATUS REQUEST
+    elif resp.event == handler.EVENT_STATUS_REQUEST:
+        show_request_status(resp.status)
 
 def main():
     cabbot_app = CabBotApp()

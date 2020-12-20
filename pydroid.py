@@ -345,6 +345,7 @@ class TextSpeak:
 			self.__tts.speak(c, TexttoSpeech.QUEUE_ADD, None, String("python-speak-id"))
 			return True
 		else:
+			print(text)
 			return False
 
 class LogCatReader(threading.Thread):
