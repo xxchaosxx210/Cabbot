@@ -316,12 +316,6 @@ def on_handler_event(resp):
         dlg.message_label.text = resp.error
         dlg.open()
 
-def set_android_map_coords(lat, lng):
-    if Globals.settings["satnav"] == "google":
-        navigate_google_maps(f"geo:0,0?q={lat},{lng}")
-    else:
-        navigate_waze(lat, lng)
-
 def main():
     cabbot_app = CabBotApp()
     cabbot_app.run()
