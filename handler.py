@@ -84,6 +84,11 @@ class Globals:
 # drivers           - list
 # driver_kick_count - int
 # message           - str
+#
+# event             - EVENT_CONNECTION_STATUS
+# type              - getstatus, getzones, getzone, getprebookings, getzoneids
+# text              - str
+# status            - int 1, 0 (Connecting, Connected)
 EVENT_QUIT = 1001
 EVENT_CHECK_STATUS = 1002
 EVENT_DRIVER_UPDATE = 1003
@@ -106,6 +111,7 @@ EVENT_MESSAGE_DISPATCH = 1019
 EVENT_ZONES = 1020
 EVENT_ANDROID_START_GPS = 1021
 EVENT_THREAD_EXCEPTION = 1022
+EVENT_CONNECTION_STATUS = 1023
 
 def _new_default_zone():
     """ creates a new zone dictionary """
@@ -369,6 +375,10 @@ def thread_handler(**kwargs):
                 # START OR STOP CHECKING DRIVER STATUS
                 elif message.event == EVENT_CHECK_STATUS:
                     check_status = not check_status
+                    if not check_status:
+                        dispatch_event(event=EVENT_CONNECTION_STATUS, text=f"Scanning has stopped")
+                    else:
+                        dispatch_event(event=EVENT_CONNECTION_STATUS, text=f"Scanning has started")
                 # REQUEST DRIVER STATUS UPDATE
                 elif message.event == EVENT_DRIVER_UPDATE:
                     # id change
@@ -434,12 +444,16 @@ def thread_handler(**kwargs):
                     # CHECK STATUS EVERY n SECONDS
                     if not Globals.zoneids:
                         # global zoneids not loaded then retrieve them from the server
+                        dispatch_event(event=EVENT_CONNECTION_STATUS, text="Retrieving Zone IDs")
                         Globals.zoneids = icabbi.getzoneids(driver_id, host)
+                        dispatch_event(event=EVENT_CONNECTION_STATUS, text="Zone IDs found")
                     try:
                         # SET DRIVER GPS AND RETRIEVE DRIVER STATUS
                         latitude, longitude = Globals.gps.getgps()
                         if latitude != 0.0 and longitude != 0.0:
+                            dispatch_event(event=EVENT_CONNECTION_STATUS, text=f"Retrieving Driver #{driver_id} status")
                             driver = icabbi.getstatus(driver_id, host, latitude, longitude)
+                            dispatch_event(event=EVENT_CONNECTION_STATUS, text=f"Driver #{driver_id} status found")
                             # CHECK JOB OFFER
                             joboffer = _check_job_offers(driver, host)
                             if joboffer:

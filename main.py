@@ -315,6 +315,9 @@ def on_handler_event(resp):
         dlg = MessageDialog()
         dlg.message_label.text = resp.error
         dlg.open()
+    elif resp.event == handler.EVENT_CONNECTION_STATUS:
+        slbl = Globals.mainscrn.ids.get("id_status_label")
+        slbl.text = resp.text
 
 def main():
     cabbot_app = CabBotApp()
