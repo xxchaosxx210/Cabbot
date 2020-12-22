@@ -512,7 +512,7 @@ def thread_handler(**kwargs):
                                             previous_state["status"] = status
                                             previous_state["zone"] = _new_default_zone()
                                             dispatch_event(
-                                                event=EVENT_NEW_JOB, driver=driver, booking=booking_info)
+                                                event=EVENT_NEW_JOB, booking=booking_info)
                                     else:
                                         # LOGGED OUT OR ON BREAK
                                         previous_state["status"] = status
