@@ -31,12 +31,15 @@ Builder.load_string('''
         orientation:"vertical"
         GridLayout:
             size_hint: 1, .1
-            cols: 1
+            cols: 2
             rows: 1
             Label:
                 markup: True
                 text: ""
                 id: id_run_mode_label
+            Label:
+                text: "Connecting..."
+                id: id_status_label
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
