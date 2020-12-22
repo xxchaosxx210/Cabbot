@@ -38,7 +38,7 @@ Builder.load_string('''
                 text: ""
                 id: id_run_mode_label
             Label:
-                text: "Connecting..."
+                text: "Waiting to Start"
                 id: id_status_label
         BoxLayout:
             orientation: "horizontal"

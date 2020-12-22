@@ -518,6 +518,8 @@ def thread_handler(**kwargs):
                                         previous_state["status"] = status
                                         previous_state["zone"] = _new_default_zone()
                                         dispatch_event(event=EVENT_LOGGED_OUT)
+                        else:
+                            dispatch_event(event=EVENT_CONNECTION_STATUS, text=f"Latitude and Longitude Coords are Zero")
                     except icabbi.NetworkExceptions as err:
                         previous_state = _new_default_states()
                         dispatch_event(event=EVENT_NETWORK_ERROR, message=str(err))
@@ -528,6 +530,7 @@ def thread_handler(**kwargs):
     except Exception as err:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         error_str = repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
+        dispatch_event(event=EVENT_CONNECTION_STATUS, text=f"Connection Error: {str(err)}")
         dispatch_event(event=EVENT_THREAD_EXCEPTION, error=error_str)
         return False
 
