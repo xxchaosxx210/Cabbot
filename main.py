@@ -94,7 +94,7 @@ class CabBotApp(App):
     def on_stop(self):
         show_toast("Closing CabBot please wait...")
         handler.send_message(event=handler.EVENT_QUIT)
-        while Globals.icabthread.isAlive():
+        while Globals.icabthread.is_alive():
             pass
     
     def on_pause(self):

@@ -304,7 +304,7 @@ def sort_prebookings(driverid, host, zones):
     for prebooking in prebookings:
         # check for zone with prebookings and add the pickup time to the zone
         for zone in zones:
-            if int(zone["id"]) == int(prebooking["zone_id"]):
+            if int(zone["id"]) == int(prebooking["zone"]["id"]):
                 zone["pickup_date"] = prebooking["pickup_date"]
                 prebooking["zone_found"] = True
                 break
@@ -316,16 +316,14 @@ def sort_prebookings(driverid, host, zones):
                           "stats": "~3",
                           "name": prebooking["zone"]["title"],
                           "pickup_date": prebooking["pickup_date"]})
-    # Bubble sort the zones by pickup_date
-    for i in range(len(zones)):
-        for x in range(len(zones) - 1):
-            try:
-                if int(zones[x]["pickup_date"]) > int(zones[x+1]["pickup_date"]):
-                    temp = zones[x+1]
-                    zones[x] = zones[x+1]
-                    zones[x+1] = temp
-            except KeyError:
-                pass
+    zones_with_time = []
+    zone_without_time = []    
+    for zone in zones:
+        if "pickup_date" not in zone:
+            zone_without_time.append(zone)
+        else:
+            zones_with_time.append(zone)
+    zones = zones_with_time + zone_without_time
     return zones
 
 def thread_handler(**kwargs):
