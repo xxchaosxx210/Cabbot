@@ -10,9 +10,9 @@ from kivy.graphics import Color
 from kivy.graphics import Rectangle
 
 __title__ = "Cabbot"
-__version__ = "0.6.9.1"
+__version__ = "0.6.9.2"
 __author__ = "Paul Millar"
-__date__ = "17-12-2020"
+__date__ = "27-12-2020"
 __license__ = "GNU Open Source"
 
 # make saving and loading settings from file thread safe
