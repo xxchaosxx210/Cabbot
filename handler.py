@@ -316,14 +316,6 @@ def sort_prebookings(driverid, host, zones):
                           "stats": "~3",
                           "name": prebooking["zone"]["title"],
                           "pickup_date": prebooking["pickup_date"]})
-    zones_with_time = []
-    zone_without_time = []    
-    for zone in zones:
-        if "pickup_date" not in zone:
-            zone_without_time.append(zone)
-        else:
-            zones_with_time.append(zone)
-    zones = zones_with_time + zone_without_time
     return zones
 
 def thread_handler(**kwargs):
